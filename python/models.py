@@ -232,11 +232,12 @@ class HeuristicModel(BaseModel):
     You have to encapsulate your code within this class that will be called for evaluation.
     """
 
-    def __init__(self):
+    def __init__(self, n_clusters):
         """Initialization of the Heuristic Model.
         """
         self.seed = 123
         self.models = self.instantiate()
+        self.n_clusters = n_clusters
 
     def instantiate(self):
         """Instantiation of the MIP Variables"""
@@ -258,12 +259,10 @@ class HeuristicModel(BaseModel):
         np.random.seed(self.seed)
         indexes = np.random.randint(0, 2, (len(X)))
         num_features = X.shape[1]
-        weights_1 = np.random.rand(num_features)
-        weights_2 = np.random.rand(num_features)
+        weights = [np.random.rand(num_features)]
 
-        weights_1 = weights_1 / np.sum(weights_1)
-        weights_2 = weights_2 / np.sum(weights_2)
-        self.weights = [weights_1, weights_2]
+        weights = [w / np.sum(w) for w in weights]
+        self.weights = weights
         return self
 
     def predict_utility(self, X):
@@ -279,4 +278,4 @@ class HeuristicModel(BaseModel):
         np.ndarray:
             (n_samples, n_clusters) array of decision function value for each cluster.
         """
-        return np.stack([np.dot(X, self.weights[0]), np.dot(X, self.weights[1])], axis=1)
+        return np.stack([np.dot(X, w) for w in self.weights], axis=1)
