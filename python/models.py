@@ -188,8 +188,10 @@ class TwoClustersMIP(BaseModel):
         # To be completed
         return
 
+
+
     def fit(self, X, Y):
-        """Estimation of the parameters - To be completed.
+        """fit function, sets random weights for each cluster. Totally independant from X & Y.
 
         Parameters
         ----------
@@ -198,26 +200,31 @@ class TwoClustersMIP(BaseModel):
         Y: np.ndarray
             (n_samples, n_features) features of unchosen elements
         """
+        np.random.seed(self.seed)
+        indexes = np.random.randint(0, 2, (len(X)))
+        num_features = X.shape[1]
+        weights_1 = np.random.rand(num_features)
+        weights_2 = np.random.rand(num_features)
 
-        # To be completed
-        return
+        weights_1 = weights_1 / np.sum(weights_1)
+        weights_2 = weights_2 / np.sum(weights_2)
+        self.weights = [weights_1, weights_2]
+        return self
 
     def predict_utility(self, X):
-        """Return Decision Function of the MIP for X. - To be completed.
+        """Simple utility function from random weights.
 
         Parameters:
         -----------
         X: np.ndarray
             (n_samples, n_features) list of features of elements
-        
+
         Returns
         -------
         np.ndarray:
             (n_samples, n_clusters) array of decision function value for each cluster.
         """
-        # To be completed
-        # Do not forget that this method is called in predict_preference (line 42) and therefor should return well-organized data for it to work.
-        return
+        return np.stack([np.dot(X, self.weights[0]), np.dot(X, self.weights[1])], axis=1)
 
 
 class HeuristicModel(BaseModel):
@@ -236,8 +243,10 @@ class HeuristicModel(BaseModel):
         # To be completed
         return
 
+  
+
     def fit(self, X, Y):
-        """Estimation of the parameters - To be completed.
+        """fit function, sets random weights for each cluster. Totally independant from X & Y.
 
         Parameters
         ----------
@@ -246,22 +255,28 @@ class HeuristicModel(BaseModel):
         Y: np.ndarray
             (n_samples, n_features) features of unchosen elements
         """
-        # To be completed
-        return
+        np.random.seed(self.seed)
+        indexes = np.random.randint(0, 2, (len(X)))
+        num_features = X.shape[1]
+        weights_1 = np.random.rand(num_features)
+        weights_2 = np.random.rand(num_features)
+
+        weights_1 = weights_1 / np.sum(weights_1)
+        weights_2 = weights_2 / np.sum(weights_2)
+        self.weights = [weights_1, weights_2]
+        return self
 
     def predict_utility(self, X):
-        """Return Decision Function of the MIP for X. - To be completed.
+        """Simple utility function from random weights.
 
         Parameters:
         -----------
         X: np.ndarray
             (n_samples, n_features) list of features of elements
-        
+
         Returns
         -------
         np.ndarray:
             (n_samples, n_clusters) array of decision function value for each cluster.
         """
-        # To be completed
-        # Do not forget that this method is called in predict_preference (line 42) and therefor should return well-organized data for it to work.
-        return
+        return np.stack([np.dot(X, self.weights[0]), np.dot(X, self.weights[1])], axis=1)
